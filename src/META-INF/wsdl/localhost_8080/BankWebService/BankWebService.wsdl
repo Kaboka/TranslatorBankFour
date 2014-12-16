@@ -4,31 +4,31 @@
 <xsd:import namespace="http://webservice/" schemaLocation="http://localhost:8080/BankWebService/BankWebService?xsd=1"/>
 </xsd:schema>
 </types>
-<message name="hello">
-<part name="parameters" element="tns:hello"/>
-</message>
-<message name="helloResponse">
-<part name="parameters" element="tns:helloResponse"/>
-</message>
 <message name="getIntrestRate">
 <part name="parameters" element="tns:getIntrestRate"/>
 </message>
 <message name="getIntrestRateResponse">
 <part name="parameters" element="tns:getIntrestRateResponse"/>
 </message>
+<message name="hello">
+<part name="parameters" element="tns:hello"/>
+</message>
+<message name="helloResponse">
+<part name="parameters" element="tns:helloResponse"/>
+</message>
 <portType name="BankWebService">
-<operation name="hello">
-<input wsam:Action="http://webservice/BankWebService/helloRequest" message="tns:hello"/>
-<output wsam:Action="http://webservice/BankWebService/helloResponse" message="tns:helloResponse"/>
-</operation>
 <operation name="getIntrestRate">
 <input wsam:Action="http://webservice/BankWebService/getIntrestRateRequest" message="tns:getIntrestRate"/>
 <output wsam:Action="http://webservice/BankWebService/getIntrestRateResponse" message="tns:getIntrestRateResponse"/>
 </operation>
+<operation name="hello">
+<input wsam:Action="http://webservice/BankWebService/helloRequest" message="tns:hello"/>
+<output wsam:Action="http://webservice/BankWebService/helloResponse" message="tns:helloResponse"/>
+</operation>
 </portType>
 <binding name="BankWebServicePortBinding" type="tns:BankWebService">
 <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
-<operation name="hello">
+<operation name="getIntrestRate">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>
@@ -37,7 +37,7 @@
 <soap:body use="literal"/>
 </output>
 </operation>
-<operation name="getIntrestRate">
+<operation name="hello">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>

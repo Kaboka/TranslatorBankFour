@@ -13,5 +13,5 @@ import webservice.LoanRequest;
  * @author Kasper
  */
 public interface IBankGateway {
-    public void contactBank(LoanRequest request);
+    public void contactBank(LoanRequest request, String correlationId);
 }

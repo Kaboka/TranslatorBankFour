@@ -28,10 +28,10 @@ import webservice.LoanRequest;
  *
  * @author Kasper
  */
-public class BankFourTranslator {
+public class TranslatorBankFour {
 
     private static final String EXCHANGE_NAME = "translator_exchange_topic";
-    private static final String IN_QUEUE = "bank_translator_four";
+    private static final String IN_QUEUE = "bank_translator_four_gr1";
     private static final String[] TOPICS = {"expensive.*"};
 
     public static void main(String[] args) throws IOException, InterruptedException {
@@ -51,9 +51,8 @@ public class BankFourTranslator {
             System.out.println("Translator for BankFour is running");
             Delivery delivery = consumer.nextDelivery();
             System.out.println("Got message: " + new String(delivery.getBody()));
-//            channelIn.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
             LoanRequest request = translateMessage(delivery);
-            gateway.contactBank(request);
+            gateway.contactBank(request, delivery.getProperties().getCorrelationId());
         }
     }
 
@@ -72,7 +71,7 @@ public class BankFourTranslator {
             request.setLoanAmount(loanAmount);
             request.setSsn(ssn);
         } catch (XPathExpressionException ex) {
-            Logger.getLogger(BankFourTranslator.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TranslatorBankFour.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return request;

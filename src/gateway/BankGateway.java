@@ -32,22 +32,20 @@ import webservice.LoanResponse;
 public class BankGateway implements IBankGateway {
 
     private Channel channelOut;
-    private static final String OUT_QUEUE = "bank_four_normalizer";
-    private static final String EXCHANGE = "normalizer_exchange";
+    private static final String OUT_QUEUE = "bank_four_normalizer_gr1";
     
     public BankGateway() {
         ConnectionCreator creator = ConnectionCreator.getInstance();
         try{
         channelOut = creator.createChannel();
         channelOut.queueDeclare(OUT_QUEUE, false, false, false, null); //bind til en exchange
-        channelOut.exchangeDeclare(EXCHANGE, "fanout");
         } catch (IOException ex) {
             Logger.getLogger(BankGateway.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Override
-    public void contactBank(LoanRequest request) {
+    public void contactBank(LoanRequest request, String correlationId) {
         String xmlMessage = "";
         BankWebService_Service service = new BankWebService_Service();
         LoanResponse response = service.getBankWebServicePort().getIntrestRate(request);
@@ -69,10 +67,10 @@ public class BankGateway implements IBankGateway {
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(BankGateway.class.getName()).log(Level.SEVERE, null, ex);
         }
-        BasicProperties probs = new BasicProperties.Builder().correlationId("1").build(); //need real correlationID
+        BasicProperties probs = new BasicProperties.Builder().correlationId(correlationId).build();
         try {
             System.out.println("Publishing message: " + xmlMessage);
-            channelOut.basicPublish(EXCHANGE, OUT_QUEUE, probs, xmlMessage.getBytes());
+            channelOut.basicPublish("", OUT_QUEUE, probs, xmlMessage.getBytes());
         } catch (IOException ex) {
             Logger.getLogger(BankGateway.class.getName()).log(Level.SEVERE, null, ex);
         }

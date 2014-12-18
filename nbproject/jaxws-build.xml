@@ -19,7 +19,7 @@
     <target name="wsimport-client-BankWebService" depends="wsimport-init">
         <mkdir dir="${build.generated.dir}/jax-wsCache/BankWebService"/>
         <property name="wsdl-BankWebService" location="xml-resources/web-service-references/BankWebService/wsdl/localhost_8080/BankWebService/BankWebService.wsdl"/>
-        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/BankWebService" destdir="${build.generated.dir}/jax-wsCache/BankWebService" wsdl="${wsdl-BankWebService}" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://localhost:8080/BankWebService/BankWebService?wsdl" xnocompile="true" xendorsed="true">
+        <wsimport sourcedestdir="${build.generated.dir}/jax-wsCache/BankWebService" destdir="${build.generated.dir}/jax-wsCache/BankWebService" wsdl="${wsdl-BankWebService}" catalog="catalog.xml" encoding="${source.encoding}" extension="true" verbose="true" fork="false" wsdlLocation="http://localhost:8080/BankWebService/BankWebService?wsdl" xnocompile="true" xendorsed="true" package="webservice">
             <depends file="${wsdl-BankWebService}"/>
             <produces dir="${build.generated.dir}/jax-wsCache/BankWebService"/>
         </wsimport>

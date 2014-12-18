@@ -6,10 +6,7 @@
 package bankfourtranslator;
 
 import gateway.BankGateway;
-import com.rabbitmq.client.AMQP.BasicProperties;
 import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.QueueingConsumer;
 import com.rabbitmq.client.QueueingConsumer.Delivery;
 import dk.cphbusiness.connection.ConnectionCreator;
@@ -30,9 +27,9 @@ import webservice.LoanRequest;
  */
 public class TranslatorBankFour {
 
-    private static final String EXCHANGE_NAME = "translator_exchange_topic";
+    private static final String EXCHANGE_NAME = "ex_translators_gr1";
     private static final String IN_QUEUE = "bank_translator_four_gr1";
-    private static final String[] TOPICS = {"expensive.*"};
+    private static final String[] TOPICS = {"expensive.high", "cheap.low" };
 
     public static void main(String[] args) throws IOException, InterruptedException {
         IBankGateway gateway = new BankGateway();
@@ -40,16 +37,20 @@ public class TranslatorBankFour {
         Channel channelIn = creator.createChannel();
         channelIn.queueDeclare(IN_QUEUE, true, false, false, null);
         channelIn.exchangeDeclare(EXCHANGE_NAME, "topic");
-
+       
+        
         for (String topic : TOPICS) {
             channelIn.queueBind(IN_QUEUE, EXCHANGE_NAME, topic);
         }
 
         QueueingConsumer consumer = new QueueingConsumer(channelIn);
         channelIn.basicConsume(IN_QUEUE, true, consumer);
+        
+        
+        System.out.println("Translator for BankFour is running");
         while (true) {
-            System.out.println("Translator for BankFour is running");
             Delivery delivery = consumer.nextDelivery();
+    //        channelIn.basicAck(delivery.getEnvelope().getDeliveryTag(), true);
             System.out.println("Got message: " + new String(delivery.getBody()));
             LoanRequest request = translateMessage(delivery);
             gateway.contactBank(request, delivery.getProperties().getCorrelationId());
@@ -66,6 +67,7 @@ public class TranslatorBankFour {
             double loanAmount = Double.parseDouble(xPath.compile("/LoanRequest/loanAmount").evaluate(doc));
             int creditScore = Integer.parseInt(xPath.compile("/LoanRequest/creditScore").evaluate(doc));
             String ssn = xPath.compile("/LoanRequest/ssn").evaluate(doc);
+            ssn = ssn.replace("-", "");
             request.setCreditScore(creditScore);
             request.setLoanDuration(loanDuration);
             request.setLoanAmount(loanAmount);

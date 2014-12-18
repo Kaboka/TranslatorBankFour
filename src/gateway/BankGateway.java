@@ -58,8 +58,8 @@ public class BankGateway implements IBankGateway {
             ssn.appendChild(doc.createTextNode(request.getSsn()));
             Element bankName = doc.createElement("bankName");
             bankName.appendChild(doc.createTextNode(response.getBankName()));
-            Element interestRate = doc.createElement("intrestRate");
-            interestRate.appendChild(doc.createTextNode(Double.toString(response.getInterrestRate())));
+            Element interestRate = doc.createElement("interestRate");
+            interestRate.appendChild(doc.createTextNode(Double.toString(response.getInterestRate())));
             loanResponse.appendChild(ssn);
             loanResponse.appendChild(bankName);
             loanResponse.appendChild(interestRate);
